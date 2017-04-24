@@ -70,6 +70,15 @@
 											<option value="">Picture of Document</option>
 										</select>
 									</div>
+									<form name="attachmentDoc" method="post" enctype="multipart/form-data" onsubmit="get_action(this)">
+										First name: <input type="text" name="attachmentname"><br>
+										attachtype: <input type="text" name="attachmentType"><br>
+										<input type="submit" value="Submit">
+									</form>
+
+									<div file-browser>
+									<input type="file" name="upload-file">
+							</div>
 									<div class="form-row">
 										<label>Photo</label>
 										<div class="photo-attachment">
@@ -118,6 +127,35 @@
 	},function(response){
 	$scope.content="Error";
 	});
+		var xv= function get_action(form) {
+			form.action = "/action_page_binary.asp";
+		}
+	});
+	appl.directive('fileBrowser', function() {
+		return {
+			restrict: 'A',
+			replace: true,
+			transclude: true,
+			scope: false,
+			template:
+			'<div class="input-prepend extended-date-picker">'+
+			'<input type="text" readonly class="override">'+
+			'<input type="button" class="btn" value="browse...">'+
+			'<div class="proxied-field-wrap" ng-transclude></div>'+
+			'</div>',
+			link: function($scope, $element) {
+				var button, fileField, proxy;
+				fileField = $element.find('[type="file"]').on('change', function() {
+					proxy.val(angular.element(this).val());
+				});
+				proxy = $element.find('[type="text"]').on('click', function() {
+					fileField.trigger('click');
+				});
+				button = $element.find('[type="button"]').on('click', function() {
+					fileField.trigger('click');
+				});
+			}
+		};
 	});
 	</script>	
 <script>
@@ -144,6 +182,7 @@ $(document).ready(function(){
 	var w_width = $(window).width();
 		$('.attachments-menu').css({'width': w_width * 0.45});
 });
+
 </script>
 </body>
 </html>		
